@@ -20,7 +20,6 @@ export const dictionaryHelpers = {
     where?: {
       lampungWord?: { contains: string };
       indonesiaWord?: { contains: string };
-      category?: string;
       dialect?: string;
     };
   }) => {
@@ -64,12 +63,20 @@ export const dictionaryHelpers = {
     lampungWord: string;
     indonesiaWord: string;
     dialect?: string;
-    category: string;
-    exampleSentence?: string;
-    exampleMeaning?: string;
+    partOfSpeech?: string;
+    description?: string;
+    source?: string;
   }) => {
     return await prisma.dictionary.create({
-      data,
+      data: {
+        lampungWord: data.lampungWord,
+        indonesiaWord: data.indonesiaWord,
+        dialect: data.dialect || "A",
+        partOfSpeech: data.partOfSpeech,
+        description: data.description,
+        source: data.source,
+        isActive: true,
+      },
     });
   },
 
@@ -78,9 +85,9 @@ export const dictionaryHelpers = {
     lampungWord?: string;
     indonesiaWord?: string;
     dialect?: string;
-    category?: string;
-    exampleSentence?: string;
-    exampleMeaning?: string;
+    partOfSpeech?: string;
+    description?: string;
+    source?: string;
     isActive?: boolean;
   }) => {
     return await prisma.dictionary.update({
@@ -142,8 +149,8 @@ export const translationHistoryHelpers = {
   create: async (data: {
     inputText: string;
     translatedText: string;
-    simplifiedText?: string;
     direction?: string;
+    detectedDialect?: string;
     nlpSteps: any;
     processingTime?: number;
   }) => {
@@ -241,30 +248,6 @@ export const adminHelpers = {
         isActive: true,
         createdAt: true,
       },
-    });
-  },
-};
-
-// Simplification history helper functions
-export const simplificationHistoryHelpers = {
-  // Create new simplification history
-  create: async (data: {
-    formalText: string;
-    simplifiedText: string;
-  }) => {
-    return await prisma.simplificationHistory.create({
-      data,
-    });
-  },
-
-  // Get all simplification history
-  getAll: async (options?: {
-    skip?: number;
-    take?: number;
-  }) => {
-    return await prisma.simplificationHistory.findMany({
-      ...options,
-      orderBy: { createdAt: 'desc' },
     });
   },
 };
