@@ -110,7 +110,6 @@ export async function translateText(request: TranslationRequest): Promise<Transl
       data: {
         inputText: text,
         translatedText: translatedText,
-        simplifiedText: simplifiedText,
         direction: "lampung_to_indonesia",
         nlpSteps: {
           caseFolding: caseFolded,
