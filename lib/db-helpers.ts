@@ -99,19 +99,18 @@ export const dictionaryHelpers = {
   // Get dictionary statistics
   getStats: async () => {
     const total = await prisma.dictionary.count();
-    const byCategory = await prisma.dictionary.groupBy({
-      by: ['category'],
-      _count: true,
-    });
     const byDialect = await prisma.dictionary.groupBy({
       by: ['dialect'],
       _count: true,
     });
+    const activeCount = await prisma.dictionary.count({
+      where: { isActive: true },
+    });
 
     return {
       total,
-      byCategory,
       byDialect,
+      activeCount,
     };
   },
 };
